@@ -1,5 +1,5 @@
-import React, { use } from "react";
 import HotJobCard from "./HotJobCard";
+import { use } from "react";
 
 const HotJobs = ({ jobsPromise }) => {
   const jobs = use(jobsPromise);

@@ -2,15 +2,31 @@ import React, { useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { Link } from 'react-router-dom';
 
+
+async function fetchJobs(email) {
+  const response = await fetch(`http://localhost:5000/jobs?email=${email}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch jobs");
+  }
+  return response.json();
+}
+
 const MyPostedJobs = () => {
-    const [jobs, setJobs] = useState([]);
+    
     const { user } = useAuth();
 
+
+    const [jobs, setJobs] = useState([]);
+
     useEffect(() => {
-        fetch(`http://localhost:5000/jobs?email=${user.email}`)
-            .then(res => res.json())
-            .then(data => setJobs(data))
-    }, [user.email])
+      async function loadJobs() {
+        const data = await fetchJobs(user.email);
+        setJobs(data);
+      }
+      if (user?.email) {
+        loadJobs();
+      }
+    }, [user?.email]);
 
     return (
         <div>
